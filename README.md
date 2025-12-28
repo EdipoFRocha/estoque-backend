@@ -50,7 +50,7 @@ O projeto foi desenvolvido com arquitetura REST, autenticação via JWT em cooki
 
 ---
 
-## 🏗️ Arquitetura
+##  Arquitetura
 
 O projeto segue uma arquitetura em camadas:
 
