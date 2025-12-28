@@ -1,0 +1,10 @@
+ALTER TABLE company
+ADD COLUMN trade_name VARCHAR(255);
+
+ALTER TABLE company
+ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE;
+
+UPDATE company SET active = TRUE WHERE active IS NULL;
+
+ALTER TABLE company
+ADD CONSTRAINT uk_company_name UNIQUE (name);

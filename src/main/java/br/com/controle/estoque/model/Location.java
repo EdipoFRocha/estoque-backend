@@ -1,0 +1,46 @@
+package br.com.controle.estoque.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "location", schema = "mvp_clean")
+public class Location {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
+    @Column(nullable = false, length = 50)
+    private String code;
+
+    @Column(nullable = false, length = 160)
+    private String name;
+
+    @Column(nullable = false)
+    private Boolean active = true;
+
+    public Long getId() { return id; }
+
+    public Company getCompany() { return company; }
+    public void setCompany(Company company) { this.company = company; }
+
+    public Warehouse getWarehouse() { return warehouse; }
+    public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; }
+
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+}

@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/estoque
+    username: postgres
+    password: SUA_SENHA_AQUI
+    hikari:
+      connectionInitSql: SET search_path TO mvp_clean, public
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: mvp_clean
+    default-schema: mvp_clean
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: "COLOQUE_SUA_CHAVE_AQUI"
+    access-ms: 86400000
+    refresh-ms: 86400000
+  cors:
+    origins: "http://localhost:5173"
