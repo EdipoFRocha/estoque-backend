@@ -9,6 +9,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.time.Duration;
 import java.util.Map;
@@ -19,6 +21,12 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
+
+    @Value("${app.cookies.secure:false}")
+    private boolean cookieSecure;
+
+    @Value("${app.cookies.same-site:Lax}")
+    private String cookieSameSite;
 
     public AuthController(AuthenticationManager authManager, JwtService jwtService) {
         this.authManager = authManager;
@@ -37,13 +45,12 @@ public class AuthController {
 
         String access = jwtService.genAccess(username, role);
 
-        // cookie robusto (controla SameSite)
-        ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", access)
+        ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", "")
                 .httpOnly(true)
                 .path("/")
-                .maxAge(Duration.ofHours(4))
-                .sameSite("Lax")
-                .secure(false)
+                .maxAge(Duration.ZERO)
+                .sameSite(cookieSameSite)
+                .secure(cookieSecure)
                 .build();
 
         res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -57,8 +64,8 @@ public class AuthController {
                 .httpOnly(true)
                 .path("/")
                 .maxAge(Duration.ZERO)
-                .sameSite("Lax")
-                .secure(false)
+                .sameSite(cookieSameSite)
+                .secure(cookieSecure)
                 .build();
 
         res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
