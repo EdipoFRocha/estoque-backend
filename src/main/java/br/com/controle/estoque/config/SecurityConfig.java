@@ -28,9 +28,6 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final JwtCookieAuthFilter jwtCookieAuthFilter;
 
-    @Value("${app.cors.origins:http://localhost:5173}")
-    private String corsOrigins;
-
     @Autowired
     public SecurityConfig(JwtService jwtService, JwtCookieAuthFilter jwtCookieAuthFilter) {
         this.jwtService = jwtService;
@@ -103,17 +100,28 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        List<String> origins = List.of(corsOrigins.split(","))
-                .stream()
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .toList();
+        cfg.setAllowedOrigins(List.of(
+                "https://projeto-controle-estoque-frontend.vercel.app",
+                "http://localhost:5173" // mantém local
+        ));
 
+        cfg.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+        ));
 
-        cfg.setAllowedOriginPatterns(origins);
+        cfg.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "X-XSRF-TOKEN",
+                "XSRF-TOKEN",
+                "X-Requested-With"
+        ));
 
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        cfg.setExposedHeaders(List.of(
+                "Set-Cookie"
+        ));
+
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
 
