@@ -41,16 +41,20 @@ public class AuthController {
         );
 
         String username = auth.getName();
-        String role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
+        String role = auth.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority()
+                .replace("ROLE_", "");
 
         String access = jwtService.genAccess(username, role);
 
-        ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", "")
+        ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", access)
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .path("/")
-                .maxAge(Duration.ZERO)
-                .sameSite(cookieSameSite)
-                .secure(cookieSecure)
+                .maxAge(Duration.ofHours(8))
                 .build();
 
         res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
