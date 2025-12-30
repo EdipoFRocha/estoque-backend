@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req, HttpServletResponse res) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
 
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.username(), req.password())
@@ -57,23 +57,25 @@ public class AuthController {
                 .maxAge(Duration.ofHours(8))
                 .build();
 
-        res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-
-        return ResponseEntity.ok(new LoginResponse(username, role));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                .body(new LoginResponse(username, role));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse res) {
+    public ResponseEntity<?> logout() {
+
         ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", "")
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(Duration.ZERO)
-                .sameSite(cookieSameSite)
-                .secure(cookieSecure)
                 .build();
 
-        res.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        return ResponseEntity.ok(Map.of("ok", true));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                .body(Map.of("ok", true));
     }
 
     @GetMapping("/me")
