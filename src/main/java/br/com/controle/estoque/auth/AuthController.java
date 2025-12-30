@@ -80,14 +80,16 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> me(Authentication auth) {
-        if (auth == null
-                || auth instanceof AnonymousAuthenticationToken
-                || !auth.isAuthenticated()) {
+        if (auth == null || !auth.isAuthenticated()) {
             return ResponseEntity.status(401).body(Map.of("error", "Não autenticado"));
         }
 
-        String role = auth.getAuthorities()
-                .iterator()
+        var authorities = auth.getAuthorities();
+        if (authorities == null || authorities.isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("error", "Sem permissões"));
+        }
+
+        String role = authorities.iterator()
                 .next()
                 .getAuthority()
                 .replace("ROLE_", "");
