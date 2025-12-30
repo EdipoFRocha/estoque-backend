@@ -53,7 +53,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
-                .path("/")
+                .path("/api")
                 .maxAge(Duration.ofHours(8))
                 .build();
 
@@ -69,7 +69,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
-                .path("/")
+                .path("/api")
                 .maxAge(Duration.ZERO)
                 .build();
 
