@@ -23,6 +23,11 @@ public class CompanyService {
         this.currentUserService = currentUserService;
     }
 
+    public Long getCurrentCompanyId() {
+        return getCurrentCompany().getId();
+    }
+
+
     @Transactional(readOnly = true)
     public CompanyMeResponse getCurrentCompany() {
         Long companyId = currentUserService.getCompanyId();

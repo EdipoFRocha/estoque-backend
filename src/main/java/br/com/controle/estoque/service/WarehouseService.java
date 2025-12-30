@@ -20,14 +20,19 @@ public class WarehouseService {
         this.companyService = companyService;
     }
 
+    @Transactional(readOnly = true)
     public List<WarehouseResponseDTO> list() {
-        Long companyId = companyService.getCurrentCompany().getId();
+        Long companyId = companyService.getCurrentCompanyId();
+
         return repository.findByCompany_IdAndActiveTrueOrderByNameAsc(companyId)
-                .stream().map(this::toDTO).toList();
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
+    @Transactional
     public WarehouseResponseDTO create(WarehouseRequestDTO dto) {
-        Long companyId = companyService.getCurrentCompany().getId();
+        Long companyId = companyService.getCurrentCompanyId();
 
         String code = dto.code().trim();
         if (repository.existsByCompany_IdAndCodeIgnoreCase(companyId, code)) {
@@ -39,6 +44,7 @@ public class WarehouseService {
         w.setName(dto.name().trim());
         w.setActive(true);
 
+        // referência por id (ok)
         Company c = new Company();
         c.setId(companyId);
         w.setCompany(c);
@@ -48,7 +54,7 @@ public class WarehouseService {
 
     @Transactional
     public WarehouseResponseDTO update(Long id, WarehouseUpdateDTO dto) {
-        Long companyId = companyService.getCurrentCompany().getId();
+        Long companyId = companyService.getCurrentCompanyId();
 
         Warehouse w = repository.findByIdAndCompany_Id(id, companyId)
                 .orElseThrow(() -> new IllegalArgumentException("Almoxarifado não encontrado."));
@@ -74,7 +80,7 @@ public class WarehouseService {
 
     @Transactional
     public void deactivate(Long id) {
-        Long companyId = companyService.getCurrentCompany().getId();
+        Long companyId = companyService.getCurrentCompanyId();
 
         Warehouse w = repository.findByIdAndCompany_Id(id, companyId)
                 .orElseThrow(() -> new IllegalArgumentException("Almoxarifado não encontrado."));

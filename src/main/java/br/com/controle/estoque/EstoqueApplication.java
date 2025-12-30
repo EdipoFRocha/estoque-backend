@@ -25,9 +25,6 @@ public class EstoqueApplication {
     @Bean
     CommandLineRunner gerarHashAdmin(PasswordEncoder passwordEncoder) {
         return args -> {
-            System.out.println("=======================================");
-            System.out.println("HASH_ADMIN = " + passwordEncoder.encode("Admin@123"));
-            System.out.println("=======================================");
         };
     }
 }
