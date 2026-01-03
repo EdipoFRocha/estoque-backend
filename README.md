@@ -1,56 +1,97 @@
-#  Estoque – Backend
+Controle de Estoque – Backend
 
-Backend do **Estoque MVP**, um sistema web de controle de estoque e operações comerciais voltado para **pequenas e médias empresas**, com foco em simplicidade, rastreabilidade e controle de acesso por perfil.
+Backend do Sistema de Controle de Estoque, uma aplicação web desenvolvida para atender pequenas e médias empresas, oferecendo controle de estoque, operações comerciais e gestão de usuários com segurança, rastreabilidade e arquitetura escalável.
+O sistema foi projetado para operar em ambiente real, com autenticação segura, separação por empresa (multi-tenant lógico) e controle de acesso por perfil.
 
-O projeto foi desenvolvido com arquitetura REST, autenticação via JWT em cookies e suporte a múltiplas empresas.
+Objetivo do Sistema
+Substituir controles manuais e planilhas por um sistema centralizado que permita:
+• Organização dos processos de estoque
+• Redução de erros operacionais
+• Rastreabilidade completa das movimentações
+• Controle de acesso conforme responsabilidade do usuário
 
----
+Funcionalidades
 
-##  Funcionalidades
+• Autenticação e autorização baseada em perfis (RBAC)
+• Arquitetura multiempresa (cada usuário pertence a uma empresa)
+• Gestão de usuários e permissões
+• Cadastro de materiais
+• Cadastro de clientes
+• Recebimento de materiais
+• Vendas e devoluções
+• Ajustes de estoque (entrada e saída)
+• Controle de saldo por armazém e local
+• Histórico completo de movimentações
+• Migrações versionadas de banco de dados com Flyway
 
-- Autenticação e autorização por perfil (RBAC)
-- Multiempresa (cada usuário pertence a uma empresa)
-- Controle de usuários e permissões
-- Cadastro de materiais
-- Cadastro de clientes
-- Recebimento de materiais
-- Vendas
-- Ajustes de estoque (entrada e saída)
-- Controle de saldo por armazém e local
-- Histórico e rastreabilidade de movimentações
-- Migrações de banco com Flyway
+Perfis de Usuário
+Perfil          Permissões principais
+MASTER_ADMIN	  Administração global e empresas
+GERENTE        	Acesso total à empresa
+SUPERVISAO    	Operações e ajustes
+LOGISTICA	      Materiais, estoque e recebimento
+OPERADOR      	Vendas, recebimento e consultas
+RH	            Gestão de usuários
 
----
+As permissões são aplicadas tanto no backend quanto no frontend.
 
-##  Perfis de Usuário
+Tecnologias Utilizadas
+• Java 17
+• Spring Boot
+• Spring Security
+• JWT (cookies HTTP Only)
+• PostgreSQL
+• Flyway
+• JPA / Hibernate
+• Maven
 
-| Perfil        | Permissões principais |
-|--------------|-----------------------|
-| MASTER_ADMIN | Administração global e empresas |
-| GERENTE      | Acesso total à empresa |
-| SUPERVISAO   | Operações + ajustes |
-| LOGISTICA    | Materiais, estoque, recebimento |
-| OPERADOR     | Vendas, recebimento, consultas |
-| RH           | Gestão de usuários |
+Arquitetura
+O projeto segue uma arquitetura REST em camadas:
+Controller → Service → Repository → Database
 
-> As permissões são aplicadas tanto no **frontend** quanto no **backend**.
+Camadas
+• Controller: exposição dos endpoints REST
+• Service: regras de negócio e validações
+• Repository: acesso a dados via JPA
+• Security: autenticação, autorização e filtros JWT
+• DTOs: separação entre modelo interno e dados expostos
 
----
+Essa abordagem garante manutenibilidade, segurança e escalabilidade.
 
-##  Tecnologias Utilizadas
+Segurança
+• Autenticação via JWT armazenado em cookies HTTP Only
+• Filtros de segurança centralizados no Spring Security
+• Proteção de rotas por perfil de usuário
+• Isolamento de dados por empresa
 
-- **Java 17**
-- **Spring Boot**
-- Spring Security
-- JWT (em cookies HTTP Only)
-- PostgreSQL
-- Flyway
-- JPA / Hibernate
-- Maven
+Configuração do Ambiente
+Pré-requisitos
+• Java 17+
+• Maven
+• PostgreSQL
+• Variáveis de Ambiente
 
----
+Este projeto não versiona dados sensíveis.
 
-##  Arquitetura
+Utilize um arquivo de configuração local baseado no exemplo:
 
-O projeto segue uma arquitetura em camadas:
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/estoque_mvp
+    username: postgres
+    password: SUA_SENHA
 
+app:
+  jwt:
+    secret: SUA_CHAVE_SECRETA
+
+Status do Projeto
+• Backend estável
+• Em produção
+• Melhorias planejadas (relatórios, performance e novos módulos)
+
+Autor
+Édipo Ferreira da Rocha
+Graduando em Engenharia da Computação
+GitHub : https://github.com/EdipoFRocha
+LinkedIn : linkedin.com/in/edipo-ferreira90021511
